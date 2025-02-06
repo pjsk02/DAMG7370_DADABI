@@ -24,6 +24,22 @@
 				"typeProperties": {
 					"source": {
 						"type": "ParquetSource",
+						"additionalColumns": [
+							{
+								"name": "Job_ID",
+								"value": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "Load_Date",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": false,
@@ -44,7 +60,8 @@
 						"linkedServiceName": {
 							"referenceName": "ls_stgblobstorage2025",
 							"type": "LinkedServiceReference"
-						}
+						},
+						"path": "adfstagedcommandtempdata"
 					}
 				},
 				"inputs": [
@@ -62,7 +79,11 @@
 				"outputs": [
 					{
 						"referenceName": "SnowflakeTable1",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Schema_Name": "TMEMP_SCHEMA",
+							"Table_Name": "PET_LICENSE_STAGE"
+						}
 					}
 				]
 			},
