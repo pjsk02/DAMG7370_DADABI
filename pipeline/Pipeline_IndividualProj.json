@@ -43,7 +43,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Parquet_NYPD",
+						"referenceName": "Parquet_NYPD_2",
 						"type": "DatasetReference"
 					}
 				],
