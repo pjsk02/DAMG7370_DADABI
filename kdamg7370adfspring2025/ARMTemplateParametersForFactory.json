@@ -8,6 +8,9 @@
 		"Snowflake1_password": {
 			"value": ""
 		},
+		"Snowflake_NYPD_Connection_password": {
+			"value": ""
+		},
 		"AzureDataLakeStorage_LS_properties_typeProperties_url": {
 			"value": "https://kdamg7370spring2025.dfs.core.windows.net/"
 		},
@@ -22,6 +25,12 @@
 		},
 		"ls_stgblobstorage2025_sasUri": {
 			"value": ""
+		},
+		"Snowflake_NYPD_Connection_properties_typeProperties_database": {
+			"value": "IP_NYPD_DB"
+		},
+		"Snowflake_NYPD_Connection_properties_typeProperties_role": {
+			"value": "IP_NYPD_ROLE"
 		}
 	}
 }
