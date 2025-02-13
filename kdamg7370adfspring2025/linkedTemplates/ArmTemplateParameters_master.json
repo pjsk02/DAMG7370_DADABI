@@ -23,14 +23,14 @@
 		"Snowflake1_properties_typeProperties_role": {
 			"value": "TEMP_ROLE"
 		},
-		"ls_stgblobstorage2025_sasUri": {
-			"value": ""
-		},
 		"Snowflake_NYPD_Connection_properties_typeProperties_database": {
 			"value": "IP_NYPD_DB"
 		},
 		"Snowflake_NYPD_Connection_properties_typeProperties_role": {
 			"value": "IP_NYPD_ROLE"
+		},
+		"ls_stgblobstorage2025_sasUri": {
+			"value": ""
 		},
 		"containerUri": {
 			"value": ""
