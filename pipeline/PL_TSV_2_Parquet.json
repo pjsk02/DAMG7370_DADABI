@@ -156,6 +156,8 @@
 				"defaultValue": "pet_lic_data.parquet"
 			}
 		},
-		"annotations": []
-	}
+		"annotations": [],
+		"lastPublishTime": "2025-02-06T23:19:50Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
