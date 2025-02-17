@@ -1,5 +1,5 @@
 {
-	"name": "df_Seattle_Pet_LIC",
+	"name": "df_Seattle_Pet_LIC_CleanUp",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -16,7 +16,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "df_SnowflakeTable",
+						"referenceName": "ds_SnowflakeTable_STAGE",
 						"type": "DatasetReference"
 					},
 					"name": "sink1",
@@ -61,7 +61,7 @@
 				"          LIC_Number,",
 				"          Animal_Name,",
 				"          Species,",
-				"          {Primary Breed},",
+				"          Primary_Breed = {Primary Breed},",
 				"          Secondary_Breed,",
 				"          ZIP_Code,",
 				"          Job_Id,",
@@ -88,7 +88,18 @@
 				"     upsertable:false,",
 				"     truncate:true,",
 				"     format: 'table',",
-				"     stageInsert: true) ~> sink1"
+				"     stageInsert: true,",
+				"     mapColumn(",
+				"          LICENSE_ISSUE_DATE = LIC_ISSUE_DATE,",
+				"          LICENSE_NUMBER = LIC_Number,",
+				"          ANIMAL_NAME = Animal_Name,",
+				"          SPECIES = Species,",
+				"          PRIMARY_BREED = Primary_Breed,",
+				"          SECONDARY_BREED = Secondary_Breed,",
+				"          ZIP_CODE = ZIP_Code,",
+				"          DI_JOB_ID = Job_Id,",
+				"          DI_LOAD_DT = Load_Dt",
+				"     )) ~> sink1"
 			]
 		}
 	}
