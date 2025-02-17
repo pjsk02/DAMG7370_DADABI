@@ -5,6 +5,19 @@
 			"referenceName": "AzureDataLakeStorage_LS",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Directory": {
+				"type": "string",
+				"defaultValue": "na"
+			},
+			"FileName": {
+				"type": "string",
+				"defaultValue": "Seattle_Pet_Licenses_20250206.tsv"
+			},
+			"Delimiter": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
