@@ -8,7 +8,7 @@
 		"parameters": {
 			"FileName": {
 				"type": "string",
-				"defaultValue": "test.txt"
+				"defaultValue": "test.tsv"
 			},
 			"FileDelimiter": {
 				"type": "string",
