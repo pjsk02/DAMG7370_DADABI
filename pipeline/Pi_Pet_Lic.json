@@ -89,7 +89,10 @@
 						"referenceName": "df_Seattle_LocationDim",
 						"type": "DataFlowReference",
 						"parameters": {
-							"JobID": "'55'"
+							"JobID": {
+								"value": "'@{pipeline().RunId}'",
+								"type": "Expression"
+							}
 						}
 					},
 					"compute": {
