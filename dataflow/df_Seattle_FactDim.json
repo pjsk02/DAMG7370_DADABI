@@ -37,20 +37,7 @@
 				}
 			],
 			"sinks": [],
-			"transformations": [
-				{
-					"name": "joinLocationDim"
-				},
-				{
-					"name": "join1"
-				},
-				{
-					"name": "join2"
-				},
-				{
-					"name": "surrogateKey1"
-				}
-			],
+			"transformations": [],
 			"scriptLines": [
 				"source(output(",
 				"          LICENSE_ISSUE_DATE as date,",
@@ -106,25 +93,7 @@
 				"     validateSchema: false,",
 				"     format: 'table') ~> sourceDateDim",
 				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1",
-				"sourceStg, sourceLocationDim join(sourceStg@ZIP_CODE == sourceLocationDim@ZIP_CODE,",
-				"     joinType:'left',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> joinLocationDim",
-				"joinLocationDim, sourceBreedDim join(ERROR_FUNCTION('') == sourceBreedDim@BREED_SK,",
-				"     joinType:'left',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
-				"join1, sourceDateDim join(ISSUED_DATE_ID == DT,",
-				"     joinType:'inner',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join2",
-				"join2 keyGenerate(output({undefined} as long),",
-				"     startAt: 1L,",
-				"     stepValue: 1L) ~> surrogateKey1"
+				"     validateSchema: false) ~> source1"
 			]
 		}
 	}
