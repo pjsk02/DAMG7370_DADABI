@@ -1,0 +1,1125 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "kdamg7370adfspring2025"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Pipeline_IndividualProj')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Parquet_2_Snow",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"additionalColumns": [
+									{
+										"name": "Job_ID",
+										"value": {
+											"value": "@pipeline().RunId",
+											"type": "Expression"
+										}
+									},
+									{
+										"name": "Load_Date",
+										"value": {
+											"value": "@utcNow()",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "ParquetReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SnowflakeV2Sink",
+								"importSettings": {
+									"type": "SnowflakeImportCopyCommand"
+								}
+							},
+							"enableStaging": true,
+							"stagingSettings": {
+								"linkedServiceName": {
+									"referenceName": "ls_stgblobstorage2025",
+									"type": "LinkedServiceReference"
+								},
+								"path": ""
+							},
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ARREST_KEY",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ARREST_KEY",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PD_CD",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "PD_CD",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "PD_DESC",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PD_DESC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "KY_CD",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "KY_CD",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "OFNS_DESC",
+											"type": "String"
+										},
+										"sink": {
+											"name": "OFNS_DESC",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAW_CODE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAW_CODE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "LAW_CAT_CD",
+											"type": "String"
+										},
+										"sink": {
+											"name": "LAW_CAT_CD",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ARREST_BORO",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ARREST_BORO",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ARREST_PRECINCT",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "ARREST_PRECINCT",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "JURISDICTION_CODE",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "JURISDICTION_CODE",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "AGE_GROUP",
+											"type": "String"
+										},
+										"sink": {
+											"name": "AGE_GROUP",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERP_SEX",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PERP_SEX",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "PERP_RACE",
+											"type": "String"
+										},
+										"sink": {
+											"name": "PERP_RACE",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "X_COORD_CD",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "X_COORD_CD",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "Y_COORD_CD",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "Y_COORD_CD",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "LATITUDE",
+											"type": "Single"
+										},
+										"sink": {
+											"name": "LATITUDE",
+											"type": "Double"
+										}
+									},
+									{
+										"source": {
+											"name": "LONGITUDE",
+											"type": "Single"
+										},
+										"sink": {
+											"name": "LONGITUDE",
+											"type": "Double"
+										}
+									},
+									{
+										"source": {
+											"name": "NEW_GEOREFERENCED_COLUMN",
+											"type": "String"
+										},
+										"sink": {
+											"name": "NEW_GEOREFERENCED_COLUMN",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ARREST_DATE_FORMATTED",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "ARREST_DATE_FORMATTED",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "Job_ID",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DI_JOB_ID",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Load_Date",
+											"type": "String"
+										},
+										"sink": {
+											"name": "DI_LOAD_DT",
+											"type": "DateTime"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Parquet_NYPD",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SnowflakeTable_NYPD",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2025-02-13T21:11:13Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DataFlow_Parquet_NYPD",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "SnowflakeTable_NYPD",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ARREST_KEY as string,",
+						"          PD_CD as integer,",
+						"          PD_DESC as string,",
+						"          KY_CD as integer,",
+						"          OFNS_DESC as string,",
+						"          LAW_CODE as string,",
+						"          LAW_CAT_CD as string,",
+						"          ARREST_BORO as string,",
+						"          ARREST_PRECINCT as integer,",
+						"          JURISDICTION_CODE as integer,",
+						"          AGE_GROUP as string,",
+						"          PERP_SEX as string,",
+						"          PERP_RACE as string,",
+						"          X_COORD_CD as double,",
+						"          Y_COORD_CD as double,",
+						"          Latitude as string,",
+						"          Longitude as string,",
+						"          {New Georeferenced Column} as string,",
+						"          ARREST_DATE_Formatted as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'parquet') ~> source1",
+						"source1 derive(ARREST_DATE_Formatted = toString(ARREST_DATE_Formatted, \"yyyy-MM-dd HH:mm:ss\")) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     stageInsert: true) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_Seattle_BreedDim')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_SnowflakeTable_STAGE",
+								"type": "DatasetReference"
+							},
+							"name": "sourceStg",
+							"description": "Import data from ds_SnowflakeTable_STAGE"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_BreedDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "BreedDimMaxID"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_BreedDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "sourceBreedDIM"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_BreedDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "sinkBreedDim"
+						}
+					],
+					"transformations": [
+						{
+							"name": "SourseDataWithSK"
+						},
+						{
+							"name": "aggregateBreedKeys"
+						},
+						{
+							"name": "surrogateKey"
+						},
+						{
+							"name": "DerivedColumns"
+						},
+						{
+							"name": "jointoTarget"
+						},
+						{
+							"name": "filterExistingRows"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     DI_JOB_ID as string (\"59\")",
+						"}",
+						"source(output(",
+						"          LICENSE_ISSUE_DATE as string,",
+						"          LICENSE_NUMBER as string,",
+						"          ANIMAL_NAME as string,",
+						"          SPECIES as string,",
+						"          PRIMARY_BREED as string,",
+						"          SECONDARY_BREED as string,",
+						"          ZIP_CODE as string,",
+						"          DI_JOB_ID as string,",
+						"          DI_LOAD_DT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table') ~> sourceStg",
+						"source(output(",
+						"          MAXBREEDSK as decimal(10,0)",
+						"     ),",
+						"     allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     query: 'select NVL(MAX(BREED_SK),0) as MaxBreedSK FROM TMEMP_SCHEMA.BREED_DIM',",
+						"     format: 'query') ~> BreedDimMaxID",
+						"source(output(",
+						"          BREED_SK as string,",
+						"          PRIMARY_BREED_NAME as string,",
+						"          SECONDARY_BREED_NAME as string,",
+						"          SPECIES_NAME as string,",
+						"          DI_JOB_ID as string,",
+						"          DI_LOAD_DT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table') ~> sourceBreedDIM",
+						"sourceStg, BreedDimMaxID join(1==1,",
+						"     joinType:'cross',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> SourseDataWithSK",
+						"SourseDataWithSK aggregate(groupBy(SPECIES,",
+						"          PRIMARY_BREED,",
+						"          SECONDARY_BREED,",
+						"          MAXBREEDSK),",
+						"     COUNT_ROW = count(LICENSE_NUMBER)) ~> aggregateBreedKeys",
+						"filterExistingRows keyGenerate(output(RowNum as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey",
+						"surrogateKey derive(BREED_SK = MAXBREEDSK+RowNum,",
+						"          DI_CREATED_DT = currentTimestamp(),",
+						"          DI_JOB_ID = $DI_JOB_ID) ~> DerivedColumns",
+						"aggregateBreedKeys, sourceBreedDIM join(PRIMARY_BREED == PRIMARY_BREED_NAME",
+						"     && SECONDARY_BREED == SECONDARY_BREED_NAME",
+						"     && SPECIES == SPECIES_NAME,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> jointoTarget",
+						"jointoTarget filter(isNull(SPECIES_NAME)&&isNull(PRIMARY_BREED_NAME)&&isNull(SECONDARY_BREED_NAME)) ~> filterExistingRows",
+						"DerivedColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          BREED_SK as string,",
+						"          PRIMARY_BREED_NAME as string,",
+						"          SECONDARY_BREED_NAME as string,",
+						"          SPECIES_NAME as string,",
+						"          DI_JOB_ID as string,",
+						"          DI_LOAD_DT as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     stageInsert: true,",
+						"     mapColumn(",
+						"          BREED_SK,",
+						"          PRIMARY_BREED_NAME = PRIMARY_BREED,",
+						"          SECONDARY_BREED_NAME = SECONDARY_BREED,",
+						"          SPECIES_NAME = SPECIES,",
+						"          DI_JOB_ID,",
+						"          DI_LOAD_DT = DI_CREATED_DT",
+						"     )) ~> sinkBreedDim"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_Seattle_LocationDim')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_GeoDataFile",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_LocationDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "sinkLocationDim"
+						}
+					],
+					"transformations": [
+						{
+							"name": "surrogateKey"
+						},
+						{
+							"name": "derivedColumn"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     JobID as string ('55')",
+						"}",
+						"source(output(",
+						"          state_fips as short,",
+						"          state as string,",
+						"          state_abbr as string,",
+						"          zipcode as string,",
+						"          county as string,",
+						"          city as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 keyGenerate(output(SK_ID as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey",
+						"surrogateKey derive(DI_CREATED_DT = currentTimestamp(),",
+						"          DI_JOB_ID = $JobID) ~> derivedColumn",
+						"derivedColumn sink(allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     input(",
+						"          LOCATION_SK as string,",
+						"          CITY as string,",
+						"          STATE as string,",
+						"          ZIP_CODE as string,",
+						"          DI_JOB_ID as string,",
+						"          DI_LOAD_DT as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     stageInsert: true,",
+						"     mapColumn(",
+						"          LOCATION_SK = SK_ID,",
+						"          STATE = state,",
+						"          ZIP_CODE = zipcode,",
+						"          CITY = city,",
+						"          DI_JOB_ID,",
+						"          DI_LOAD_DT = DI_CREATED_DT",
+						"     )) ~> sinkLocationDim"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_Seattle_Pet_LIC_CleanUp')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText_Dataset_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "readTSVfile",
+							"description": "import data from DelimitedText_Dataset_Seattle"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_SnowflakeTable_STAGE",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to df_SnowflakeTable_V2_PET_LICENSE_STAGE"
+						}
+					],
+					"transformations": [
+						{
+							"name": "transposeColumns"
+						},
+						{
+							"name": "PickRequiredColumns"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     Job_Id as string (\"10\")",
+						"}",
+						"source(output(",
+						"          {License Issue Date} as string,",
+						"          {License Number} as string,",
+						"          {Animal's Name} as string,",
+						"          Species as string,",
+						"          {Primary Breed} as string,",
+						"          {Secondary Breed} as string,",
+						"          {ZIP Code} as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     limit: 100,",
+						"     ignoreNoFilesFound: false) ~> readTSVfile",
+						"readTSVfile derive(LIC_ISSUE_DATE = toDate({License Issue Date}, 'MMMM dd yyyy'),",
+						"          Secondary_Breed = iifNull({Secondary Breed},'Unknown'),",
+						"          ZIP_Code = lpad(toString({ZIP Code}),5,'0'),",
+						"          Species = upper(Species),",
+						"          LIC_Number = toInteger(translate({License Number}, 'S','')),",
+						"          Animal_Name = translate({Animal's Name},'()[]', ''),",
+						"          Job_Id = $Job_Id,",
+						"          Load_Dt = currentDate()) ~> transposeColumns",
+						"transposeColumns select(mapColumn(",
+						"          LIC_ISSUE_DATE,",
+						"          LIC_Number,",
+						"          Animal_Name,",
+						"          Species,",
+						"          Primary_Breed = {Primary Breed},",
+						"          Secondary_Breed,",
+						"          ZIP_Code,",
+						"          Job_Id,",
+						"          Load_Dt",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> PickRequiredColumns",
+						"PickRequiredColumns sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          LICENSE_ISSUE_DATE as string,",
+						"          LICENSE_NUMBER as string,",
+						"          ANIMAL_NAME as string,",
+						"          SPECIES as string,",
+						"          PRIMARY_BREED as string,",
+						"          SECONDARY_BREED as string,",
+						"          ZIP_CODE as string,",
+						"          DI_JOB_ID as string,",
+						"          DI_LOAD_DT as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     stageInsert: true,",
+						"     mapColumn(",
+						"          LICENSE_ISSUE_DATE = LIC_ISSUE_DATE,",
+						"          LICENSE_NUMBER = LIC_Number,",
+						"          ANIMAL_NAME = Animal_Name,",
+						"          SPECIES = Species,",
+						"          PRIMARY_BREED = Primary_Breed,",
+						"          SECONDARY_BREED = Secondary_Breed,",
+						"          ZIP_CODE = ZIP_Code,",
+						"          DI_JOB_ID = Job_Id,",
+						"          DI_LOAD_DT = Load_Dt",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/df_Seattle_FCT')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "ds_SnowflakeTable_STAGE",
+								"type": "DatasetReference"
+							},
+							"name": "sourceStg"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_LocationDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "LocationDim"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_BreedDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "breedDim"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_DateDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "DateDim"
+						},
+						{
+							"dataset": {
+								"referenceName": "ds_FactDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "FactDim"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ds_FactDim_Seattle",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "join2"
+						},
+						{
+							"name": "join3"
+						},
+						{
+							"name": "surrogateKey1"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "join4"
+						},
+						{
+							"name": "derivedColumn1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          LICENSE_ISSUE_DATE as string,",
+						"          LICENSE_NUMBER as string,",
+						"          ANIMAL_NAME as string,",
+						"          SPECIES as string,",
+						"          PRIMARY_BREED as string,",
+						"          SECONDARY_BREED as string,",
+						"          ZIP_CODE as string,",
+						"          DI_JOB_ID as string,",
+						"          DI_LOAD_DT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table') ~> sourceStg",
+						"source(output(",
+						"          LOCATION_SK as string,",
+						"          CITY as string,",
+						"          STATE as string,",
+						"          ZIP_CODE as string,",
+						"          DI_JOB_ID as string,",
+						"          DI_LOAD_DT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table') ~> LocationDim",
+						"source(output(",
+						"          BREED_SK as string,",
+						"          PRIMARY_BREED_NAME as string,",
+						"          SECONDARY_BREED_NAME as string,",
+						"          SPECIES_NAME as string,",
+						"          DI_JOB_ID as string,",
+						"          DI_LOAD_DT as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table') ~> breedDim",
+						"source(output(",
+						"          DT as string,",
+						"          ABRV_DAY_NAME as string,",
+						"          MONTH_NAME as string,",
+						"          START_DAY_OF_MONTH as string,",
+						"          END_DAY_OF_MONTH as string,",
+						"          QUARTER_NUM as string,",
+						"          DAY_OF_WEEK as string,",
+						"          IS_WEEKEND as string,",
+						"          YEAR_NUM as string,",
+						"          MONTH_NUM as string,",
+						"          DAY_NUM as string,",
+						"          DATE_DIM_SK as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'table') ~> DateDim",
+						"source(output(",
+						"          MAXPETLICSK as decimal(10,0)",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: 'select NVL(MAX(PET_LICENSE_SK),0) as MaxPetLICSK FROM TMEMP_SCHEMA.PET_LICENSES_FACT',",
+						"     format: 'query') ~> FactDim",
+						"sourceStg, LocationDim join(sourceStg@ZIP_CODE == LocationDim@ZIP_CODE,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1, breedDim join(PRIMARY_BREED == PRIMARY_BREED_NAME",
+						"     && SECONDARY_BREED == SECONDARY_BREED_NAME",
+						"     && SPECIES == SPECIES_NAME,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join2",
+						"join2, DateDim join(LICENSE_ISSUE_DATE == DT,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join3",
+						"select1 keyGenerate(output(RowNum as long),",
+						"     startAt: 1L,",
+						"     stepValue: 1L) ~> surrogateKey1",
+						"join4 select(mapColumn(",
+						"          LOCATION_SK,",
+						"          DI_JOB_ID = LocationDim@DI_JOB_ID,",
+						"          DI_LOAD_DT = LocationDim@DI_LOAD_DT,",
+						"          DATE_DIM_SK,",
+						"          PET_LICENSE_SK = MAXPETLICSK,",
+						"          BREED_SK",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"join3, FactDim join(1==1,",
+						"     joinType:'cross',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join4",
+						"surrogateKey1 derive(PET_LICENSE_SK = PET_LICENSE_SK + RowNum) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          PET_LICENSE_SK as string,",
+						"          ISSUED_DATE_ID as string,",
+						"          LOCATION_ID as string,",
+						"          BREED_ID as string,",
+						"          DT_JOB_ID as string,",
+						"          DT_CREATED_DT as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     truncate:true,",
+						"     format: 'table',",
+						"     stageInsert: true,",
+						"     mapColumn(",
+						"          PET_LICENSE_SK,",
+						"          ISSUED_DATE_ID = DI_LOAD_DT,",
+						"          LOCATION_ID = LOCATION_SK,",
+						"          BREED_ID = BREED_SK,",
+						"          DT_JOB_ID = DI_JOB_ID,",
+						"          DT_CREATED_DT = DI_LOAD_DT",
+						"     )) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Pi_Pet_Lic')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CleanPetLicData",
+						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_Seattle_Pet_LIC_CleanUp",
+								"type": "DataFlowReference",
+								"parameters": {
+									"Job_Id": {
+										"value": "'@{substring(pipeline().RunId,1,10)}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"readTSVfile": {
+										"FileName": "Seattle_Pet_Licenses_20250206.tsv",
+										"FileDelimiter": "|"
+									},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Coarse"
+						}
+					},
+					{
+						"name": "Load_BreedDim",
+						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "CleanPetLicData",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_Seattle_BreedDim",
+								"type": "DataFlowReference",
+								"parameters": {
+									"DI_JOB_ID": {
+										"value": "'@{pipeline().RunId}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"sourceStg": {},
+									"BreedDimMaxID": {},
+									"sourceBreedDIM": {},
+									"sinkBreedDim": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Coarse"
+						}
+					},
+					{
+						"name": "Load_LocationDim",
+						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Load_BreedDim",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.00:30:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_Seattle_LocationDim",
+								"type": "DataFlowReference",
+								"parameters": {
+									"JobID": {
+										"value": "'@{pipeline().RunId}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"source1": {},
+									"sinkLocationDim": {}
+								},
+								"linkedServiceParameters": {}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Coarse"
+						}
+					},
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Load_LocationDim",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "df_Seattle_FCT",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"sourceStg": {},
+									"LocationDim": {},
+									"breedDim": {},
+									"DateDim": {},
+									"FactDim": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Coarse"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/df_Seattle_Pet_LIC_CleanUp')]",
+				"[concat(variables('factoryId'), '/dataflows/df_Seattle_BreedDim')]",
+				"[concat(variables('factoryId'), '/dataflows/df_Seattle_LocationDim')]",
+				"[concat(variables('factoryId'), '/dataflows/df_Seattle_FCT')]"
+			]
+		}
+	]
+}

@@ -135,6 +135,74 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DataFlow_Parquet_NYPD')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "NYPD_ParquetFile.parquet",
+						"fileSystem": "silver"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText_Dataset_Seattle')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage_LS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileName": {
+						"type": "string",
+						"defaultValue": "test.tsv"
+					},
+					"FileDelimiter": {
+						"type": "string",
+						"defaultValue": "|"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Seattle_Pet_Licenses_20250206.tsv",
+						"fileSystem": "bronze"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "License Issue Date\tLicense Number\tAnimal's Name\tSpecies\tPrimary Breed\tSecondary Breed\tZIP Code",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage_LS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Parquet1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -168,6 +236,31 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Parquet_NYPD')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "NYPD_ParquetFile.parquet",
+						"fileSystem": "silver"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage_LS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SEATTLE_PET_LIC')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -175,6 +268,19 @@
 				"linkedServiceName": {
 					"referenceName": "AzureDataLakeStorage_LS",
 					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Directory": {
+						"type": "string",
+						"defaultValue": "na"
+					},
+					"FileName": {
+						"type": "string",
+						"defaultValue": "Seattle_Pet_Licenses_20250206.tsv"
+					},
+					"Delimiter": {
+						"type": "string"
+					}
 				},
 				"annotations": [],
 				"type": "DelimitedText",
@@ -317,7 +423,189 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Parquet_NYPD')]",
+			"name": "[concat(parameters('factoryName'), '/ds_BreedDim_Seattle')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Snowflake1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeV2Table",
+				"schema": [
+					{
+						"name": "BREED_SK",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "PRIMARY_BREED_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "SECONDARY_BREED_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "SPECIES_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "DI_JOB_ID",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "DI_LOAD_DT",
+						"type": "DATE"
+					}
+				],
+				"typeProperties": {
+					"schema": "TMEMP_SCHEMA",
+					"table": "BREED_DIM"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Snowflake1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_DateDim_Seattle')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Snowflake1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeV2Table",
+				"schema": [
+					{
+						"name": "DT",
+						"type": "DATE"
+					},
+					{
+						"name": "ABRV_DAY_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "MONTH_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "START_DAY_OF_MONTH",
+						"type": "DATE"
+					},
+					{
+						"name": "END_DAY_OF_MONTH",
+						"type": "DATE"
+					},
+					{
+						"name": "QUARTER_NUM",
+						"type": "NUMBER",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "DAY_OF_WEEK",
+						"type": "NUMBER",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "IS_WEEKEND",
+						"type": "NUMBER",
+						"precision": 1,
+						"scale": 0
+					},
+					{
+						"name": "YEAR_NUM",
+						"type": "NUMBER",
+						"precision": 4,
+						"scale": 0
+					},
+					{
+						"name": "MONTH_NUM",
+						"type": "NUMBER",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "DAY_NUM",
+						"type": "NUMBER",
+						"precision": 2,
+						"scale": 0
+					},
+					{
+						"name": "DATE_DIM_SK",
+						"type": "VARCHAR"
+					}
+				],
+				"typeProperties": {
+					"schema": "TMEMP_SCHEMA",
+					"table": "DATE_DIM"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Snowflake1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_FactDim_Seattle')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Snowflake1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeV2Table",
+				"schema": [
+					{
+						"name": "PET_LICENSE_SK",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "ISSUED_DATE_ID",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "LOCATION_ID",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "BREED_ID",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
+					},
+					{
+						"name": "DT_JOB_ID",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "DT_CREATED_DT",
+						"type": "TIMESTAMP_NTZ"
+					}
+				],
+				"typeProperties": {
+					"schema": "TMEMP_SCHEMA",
+					"table": "PET_LICENSES_FACT"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Snowflake1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_GeoDataFile')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -326,14 +614,17 @@
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "Parquet",
+				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "NYPD_ParquetFile.parquet",
-						"fileSystem": "silver"
+						"fileName": "geo-data.csv",
+						"fileSystem": "bronze"
 					},
-					"compressionCodec": "snappy"
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
 				},
 				"schema": []
 			},
@@ -342,28 +633,109 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DataFlow_Parquet_NYPD')]",
+			"name": "[concat(parameters('factoryName'), '/ds_LocationDim_Seattle')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureDataLakeStorage_LS",
+					"referenceName": "Snowflake1",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "NYPD_ParquetFile.parquet",
-						"fileSystem": "silver"
+				"type": "SnowflakeV2Table",
+				"schema": [
+					{
+						"name": "LOCATION_SK",
+						"type": "NUMBER",
+						"precision": 10,
+						"scale": 0
 					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
+					{
+						"name": "CITY",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "STATE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "ZIP_CODE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "DI_JOB_ID",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "DI_LOAD_DT",
+						"type": "DATE"
+					}
+				],
+				"typeProperties": {
+					"schema": "TMEMP_SCHEMA",
+					"table": "LOCATION_DIM"
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage_LS')]"
+				"[concat(variables('factoryId'), '/linkedServices/Snowflake1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_SnowflakeTable_STAGE')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Snowflake1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SnowflakeV2Table",
+				"schema": [
+					{
+						"name": "LICENSE_ISSUE_DATE",
+						"type": "DATE"
+					},
+					{
+						"name": "LICENSE_NUMBER",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "ANIMAL_NAME",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "SPECIES",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "PRIMARY_BREED",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "SECONDARY_BREED",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "ZIP_CODE",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "DI_JOB_ID",
+						"type": "VARCHAR"
+					},
+					{
+						"name": "DI_LOAD_DT",
+						"type": "DATE"
+					}
+				],
+				"typeProperties": {
+					"schema": "TMEMP_SCHEMA",
+					"table": "V2_PET_LICENSE_STAGE"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Snowflake1')]"
 			]
 		},
 		{
@@ -530,391 +902,14 @@
 						"defaultValue": "pet_lic_data.parquet"
 					}
 				},
-				"annotations": []
+				"annotations": [],
+				"lastPublishTime": "2025-02-06T23:19:50Z"
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Parquet1')]",
 				"[concat(variables('factoryId'), '/datasets/SnowflakeTable1')]",
 				"[concat(variables('factoryId'), '/datasets/Seattle_Pet_LIC_Updated')]",
 				"[concat(variables('factoryId'), '/linkedServices/ls_stgblobstorage2025')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Pipeline_IndividualProj')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Parquet_2_Snow",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.00:30:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "ParquetSource",
-								"additionalColumns": [
-									{
-										"name": "Job_ID",
-										"value": {
-											"value": "@pipeline().RunId",
-											"type": "Expression"
-										}
-									},
-									{
-										"name": "Load_Date",
-										"value": {
-											"value": "@utcNow()",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": false,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "ParquetReadSettings"
-								}
-							},
-							"sink": {
-								"type": "SnowflakeV2Sink",
-								"importSettings": {
-									"type": "SnowflakeImportCopyCommand"
-								}
-							},
-							"enableStaging": true,
-							"stagingSettings": {
-								"linkedServiceName": {
-									"referenceName": "ls_stgblobstorage2025",
-									"type": "LinkedServiceReference"
-								},
-								"path": ""
-							},
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "ARREST_KEY",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ARREST_KEY",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PD_CD",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "PD_CD",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "PD_DESC",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PD_DESC",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "KY_CD",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "KY_CD",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "OFNS_DESC",
-											"type": "String"
-										},
-										"sink": {
-											"name": "OFNS_DESC",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LAW_CODE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "LAW_CODE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "LAW_CAT_CD",
-											"type": "String"
-										},
-										"sink": {
-											"name": "LAW_CAT_CD",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ARREST_BORO",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ARREST_BORO",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ARREST_PRECINCT",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "ARREST_PRECINCT",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "JURISDICTION_CODE",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "JURISDICTION_CODE",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "AGE_GROUP",
-											"type": "String"
-										},
-										"sink": {
-											"name": "AGE_GROUP",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERP_SEX",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PERP_SEX",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "PERP_RACE",
-											"type": "String"
-										},
-										"sink": {
-											"name": "PERP_RACE",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "X_COORD_CD",
-											"type": "Int64"
-										},
-										"sink": {
-											"name": "X_COORD_CD",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "Y_COORD_CD",
-											"type": "Int64"
-										},
-										"sink": {
-											"name": "Y_COORD_CD",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "LATITUDE",
-											"type": "Single"
-										},
-										"sink": {
-											"name": "LATITUDE",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"name": "LONGITUDE",
-											"type": "Single"
-										},
-										"sink": {
-											"name": "LONGITUDE",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"name": "NEW_GEOREFERENCED_COLUMN",
-											"type": "String"
-										},
-										"sink": {
-											"name": "NEW_GEOREFERENCED_COLUMN",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ARREST_DATE_FORMATTED",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "ARREST_DATE_FORMATTED",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "Job_ID",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DI_JOB_ID",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Load_Date",
-											"type": "String"
-										},
-										"sink": {
-											"name": "DI_LOAD_DT",
-											"type": "DateTime"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Parquet_NYPD",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SnowflakeTable_NYPD",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Parquet_NYPD')]",
-				"[concat(variables('factoryId'), '/datasets/SnowflakeTable_NYPD')]",
-				"[concat(variables('factoryId'), '/linkedServices/ls_stgblobstorage2025')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DataFlow_Parquet_NYPD",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "SnowflakeTable_NYPD",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumn1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          ARREST_KEY as string,",
-						"          PD_CD as integer,",
-						"          PD_DESC as string,",
-						"          KY_CD as integer,",
-						"          OFNS_DESC as string,",
-						"          LAW_CODE as string,",
-						"          LAW_CAT_CD as string,",
-						"          ARREST_BORO as string,",
-						"          ARREST_PRECINCT as integer,",
-						"          JURISDICTION_CODE as integer,",
-						"          AGE_GROUP as string,",
-						"          PERP_SEX as string,",
-						"          PERP_RACE as string,",
-						"          X_COORD_CD as double,",
-						"          Y_COORD_CD as double,",
-						"          Latitude as string,",
-						"          Longitude as string,",
-						"          {New Georeferenced Column} as string,",
-						"          ARREST_DATE_Formatted as date",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false,",
-						"     format: 'parquet') ~> source1",
-						"source1 derive(ARREST_DATE_Formatted = toString(ARREST_DATE_Formatted, \"yyyy-MM-dd HH:mm:ss\")  ) ~> derivedColumn1",
-						"derivedColumn1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     stageInsert: true) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DataFlow_Parquet_NYPD')]",
-				"[concat(variables('factoryId'), '/datasets/SnowflakeTable_NYPD')]"
 			]
 		}
 	]
