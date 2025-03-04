@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "NYPD_dataflow",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
