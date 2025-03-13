@@ -43,5 +43,6 @@
 			"schema": "TMEMP_SCHEMA",
 			"table": "PET_LICENSES_FACT"
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
 }
