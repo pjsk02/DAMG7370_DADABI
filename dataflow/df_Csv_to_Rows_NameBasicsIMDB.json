@@ -1,0 +1,51 @@
+{
+	"name": "df_Csv_to_Rows_NameBasicsIMDB",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_IMDb_NameBasics",
+						"type": "DatasetReference"
+					},
+					"name": "NameBasics"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "flatten1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          nconst as string,",
+				"          primaryName as string,",
+				"          birthYear as string,",
+				"          deathYear as string,",
+				"          primaryProfession as string,",
+				"          knownForTitles as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> NameBasics",
+				"NameBasics derive(knownForTitles = split(knownForTitles,',')) ~> derivedColumn1",
+				"derivedColumn1 foldDown(unroll(knownForTitles),",
+				"     mapColumn(",
+				"          nconst,",
+				"          primaryName,",
+				"          birthYear,",
+				"          deathYear,",
+				"          primaryProfession,",
+				"          knownForTitles",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1"
+			]
+		}
+	}
+}
